@@ -202,6 +202,7 @@
 * Add missing ISO countries [Edward Ocampo-Gooding]
 * Add support for Guernsey to country.rb [cody]
 * Use :words_connector instead of connector in RequiresParameters [cody]
+* Fix extra slash in UPS endpoints [cody]
 * Add name to Shipwire class [cody]
 * Improve FedEx handling of some error conditions [cody]
 * Add support for validating credentials to Shipwire [cody]

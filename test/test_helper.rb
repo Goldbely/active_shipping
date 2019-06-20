@@ -13,6 +13,8 @@ require 'pry'
 require 'vcr'
 require 'webmock/minitest'
 
+require_relative 'helpers/holiday_helpers.rb'
+
 Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new(detailed_skip: !!ENV["CI"])
 
 VCR.configure do |config|

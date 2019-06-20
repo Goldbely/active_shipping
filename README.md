@@ -9,6 +9,7 @@ This library interfaces with the web services of various shipping carriers. The 
 
 ## Supported Shipping Carriers
 
+* [UPS](http://www.ups.com)
 * [USPS](http://www.usps.com)
 * [USPS Returns](http://returns.usps.com)
 * [FedEx](http://www.fedex.com)
@@ -70,6 +71,17 @@ packages = [
                                             postal_code: 'K1P 1J1')
 
  # Find out how much it'll be.
+ ups = ActiveShipping::UPS.new(login: 'auntjudy', password: 'secret', key: 'xml-access-key')
+ response = ups.find_rates(origin, destination, packages)
+
+ ups_rates = response.rates.sort_by(&:price).collect {|rate| [rate.service_name, rate.price]}
+ # => [["UPS Standard", 3936],
+ #     ["UPS Worldwide Expedited", 8682],
+ #     ["UPS Saver", 9348],
+ #     ["UPS Express", 9702],
+ #     ["UPS Worldwide Express Plus", 14502]]
+
+ # Check out USPS for comparison...
  usps = ActiveShipping::USPS.new(login: 'developer-key')
  response = usps.find_rates(origin, destination, packages)
 
