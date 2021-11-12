@@ -642,10 +642,16 @@ module ActiveShipping
         tracking_number = tracking_details.at('TrackingNumber').text
         status_detail = tracking_details.at('StatusDetail')
         if status_detail.blank?
-          status_code, status, status_description, delivery_signature = nil
+          status_code, status, status_description, delivery_signature, status_time, status_location = nil
         else
           status_code = status_detail.at('Code').try(:text)
           status_description = status_detail.at('AncillaryDetails/ReasonDescription').try(:text) || status_detail.at('Description').try(:text)
+          status_time = extract_timestamp(status_detail, 'CreationTime')
+          status_location = if status_location_node = status_detail.at('Location')
+                              Location.new(country: status_location_node.at('CountryCode').try(:text),
+                                           province: status_location_node.at('StateOrProvinceCode').try(:text),
+                                           city: status_location_node.at('City').try(:text))
+                            end
 
           status = TRACKING_STATUS_CODES[status_code]
 
@@ -689,6 +695,12 @@ module ActiveShipping
         end
 
         shipment_events = shipment_events.sort_by(&:time)
+
+        service_level = if service_node = tracking_details.at('Service')
+                          ServiceLevel.new(type: service_node.at('Type').try(:text),
+                                           description: service_node.at('Description').try(:text),
+                                           short_description: service_node.at('ShortDescription').try(:text))
+                        end
       end
 
       TrackingResponse.new(
@@ -701,6 +713,8 @@ module ActiveShipping
         status: status,
         status_code: status_code,
         status_description: status_description,
+        status_time: status_time,
+        status_location: status_location,
         ship_time: ship_time,
         scheduled_delivery_date: scheduled_delivery_time,
         actual_delivery_date: actual_delivery_time,
@@ -709,7 +723,8 @@ module ActiveShipping
         shipper_address: (shipper_address.nil? || shipper_address.unknown?) ? nil : shipper_address,
         origin: origin,
         destination: destination,
-        tracking_number: tracking_number
+        tracking_number: tracking_number,
+        service_level: service_level
       )
     end
 
