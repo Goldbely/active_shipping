@@ -646,7 +646,7 @@ module ActiveShipping
         else
           status_code = status_detail.at('Code').try(:text)
           status_description = status_detail.at('AncillaryDetails/ReasonDescription').try(:text) || status_detail.at('Description').try(:text)
-          status_time = extract_timestamp(status_detail, 'CreationTime')
+          status_time = extract_timestamp(status_detail, 'CreationTime') if status_detail.at('CreationTime')
           status_location = if status_location_node = status_detail.at('Location')
                               Location.new(country: status_location_node.at('CountryCode').try(:text),
                                            province: status_location_node.at('StateOrProvinceCode').try(:text),

@@ -668,6 +668,26 @@ class FedExTest < ActiveSupport::TestCase
     assert_nil response.status_location
   end
 
+  def test_tracking_info_for_status_time_present
+    mock_response = xml_fixture('fedex/tracking_response_status_time_present')
+    @carrier.expects(:commit).returns(mock_response)
+
+    response = @carrier.find_tracking_info('123456789012')
+
+    expected_location = Date.parse('2014-11-18T00:00:00')
+
+    assert_equal expected_location, response.status_time
+  end
+
+  def test_tracking_info_for_status_time_absent
+    mock_response = xml_fixture('fedex/tracking_response_status_time_absent')
+    @carrier.expects(:commit).returns(mock_response)
+
+    response = @carrier.find_tracking_info('123456789012')
+
+    assert_nil response.status_time
+  end
+
   ### create_shipment
 
   def test_create_shipment
