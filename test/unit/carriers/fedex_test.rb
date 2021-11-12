@@ -598,6 +598,24 @@ class FedExTest < ActiveSupport::TestCase
     assert_empty response.shipment_events
   end
 
+  def test_tracking_info_for_notification_with_message_node
+    mock_response = xml_fixture('fedex/tracking_response_notification_with_message_node')
+    @carrier.expects(:commit).returns(mock_response)
+
+    response = @carrier.find_tracking_info('449044304137821')
+
+    assert_equal 'SUCCESS - 0: Request was successfully processed.', response.message
+  end
+
+  def test_tracking_info_for_notification_without_message_node
+    mock_response = xml_fixture('fedex/tracking_response_notification_without_message_node')
+    @carrier.expects(:commit).returns(mock_response)
+
+    response = @carrier.find_tracking_info('449044304137821')
+
+    assert_equal 'SUCCESS - 0: N/A', response.message
+  end
+
   ### create_shipment
 
   def test_create_shipment
