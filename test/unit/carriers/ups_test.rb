@@ -173,6 +173,61 @@ class UPSTest < ActiveSupport::TestCase
     assert_empty response.shipment_events
   end
 
+  def test_tracking_info_for_service_level_present
+    tracking_response = xml_fixture('ups/service_level_present')
+    @carrier.expects(:commit).returns(tracking_response)
+    result = @carrier.find_tracking_info('1Z5FX0076803466397')
+    expected_service_level = ServiceLevel.new(type: '2ND DAY AIR',
+                                              description: '2ND DAY AIR',
+                                              short_description: '002')
+    assert_equal expected_service_level, result.service_level
+  end
+
+  def test_tracking_info_for_service_level_absent
+    tracking_response = xml_fixture('ups/service_level_absent')
+    @carrier.expects(:commit).returns(tracking_response)
+    result = @carrier.find_tracking_info('1Z5FX0076803466397')
+    assert_nil result.service_level
+  end
+
+  def test_tracking_info_for_service_level_empty
+    tracking_response = xml_fixture('ups/service_level_empty')
+    @carrier.expects(:commit).returns(tracking_response)
+    result = @carrier.find_tracking_info('1Z5FX0076803466397')
+    expected_service_level = ServiceLevel.new(type: nil, description: nil, short_description: nil)
+    assert_equal expected_service_level, result.service_level
+  end
+
+  def test_tracking_info_for_status_location_present
+    tracking_response = xml_fixture('ups/status_location_present')
+    @carrier.expects(:commit).returns(tracking_response)
+    result = @carrier.find_tracking_info('1Z5FX0076803466397')
+    expected_location = Location.new(country: 'US', province: 'KY', city: 'LOUISVILLE')
+    assert_equal expected_location, result.status_location
+  end
+
+  def test_tracking_info_for_status_location_absent
+    tracking_response = xml_fixture('ups/status_location_absent')
+    @carrier.expects(:commit).returns(tracking_response)
+    result = @carrier.find_tracking_info('1Z5FX0076803466397')
+    assert_nil result.status_location
+  end
+
+  def test_tracking_info_for_status_time_present
+    tracking_response = xml_fixture('ups/status_time_present')
+    @carrier.expects(:commit).returns(tracking_response)
+    result = @carrier.find_tracking_info('1Z5FX0076803466397')
+    expected_time = Time.utc('2011', '08', '23', '06', '38', '00')
+    assert_equal expected_time, result.status_time
+  end
+
+  def test_tracking_info_for_status_time_absent
+    tracking_response = xml_fixture('ups/status_time_absent')
+    @carrier.expects(:commit).returns(tracking_response)
+    result = @carrier.find_tracking_info('1Z5FX0076803466397')
+    assert_nil result.status_time
+  end
+
   def test_location_from_address_node_kosovo_kv
     address = Nokogiri::XML::DocumentFragment.parse(xml_fixture('ups/location_node_kosovo_kv'))
 

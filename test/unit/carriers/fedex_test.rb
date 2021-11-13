@@ -674,9 +674,9 @@ class FedExTest < ActiveSupport::TestCase
 
     response = @carrier.find_tracking_info('123456789012')
 
-    expected_location = Date.parse('2014-11-18T00:00:00')
+    expected_time = Date.parse('2014-11-18T00:00:00')
 
-    assert_equal expected_location, response.status_time
+    assert_equal expected_time, response.status_time
   end
 
   def test_tracking_info_for_status_time_absent

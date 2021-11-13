@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<TrackResponse>
+	<Response>
+		<ResponseStatusCode>1</ResponseStatusCode>
+		<ResponseStatusDescription>Success</ResponseStatusDescription>
+	</Response>
+	<Shipment>
+		<Shipper>
+			<ShipperNumber>4F940A</ShipperNumber>
+			<Address>
+				<AddressLine1>1600 WORLDWIDE BLVD</AddressLine1>
+				<City>HEBRON</City>
+				<StateProvinceCode>KY</StateProvinceCode>
+				<PostalCode>41048   8640</PostalCode>
+				<CountryCode>US</CountryCode>
+			</Address>
+		</Shipper>
+		<ShipTo>
+			<Address>
+				<City>CYPRESS</City>
+				<StateProvinceCode>TX</StateProvinceCode>
+				<PostalCode>774332681</PostalCode>
+				<CountryCode>US</CountryCode>
+			</Address>
+		</ShipTo>
+		<ShipmentWeight>
+			<UnitOfMeasurement>
+				<Code>LBS</Code>
+			</UnitOfMeasurement>
+			<Weight>5.40</Weight>
+		</ShipmentWeight>
+		<Service>
+			<Code>002</Code>
+			<Description>2ND DAY AIR</Description>
+		</Service>
+		<ReferenceNumber>
+			<Code>01</Code>
+			<Value>62093047</Value>
+		</ReferenceNumber>
+		<ShipmentIdentificationNumber>1Z4F940A0266088694</ShipmentIdentificationNumber>
+		<PickupDate>20110822</PickupDate>
+		<ScheduledDeliveryDate>20110824</ScheduledDeliveryDate>
+		<Package>
+			<TrackingNumber>1Z4F940A0266088694</TrackingNumber>
+			<Message>
+				<Code>01</Code>
+				<Description>On Time</Description>
+			</Message>
+			<PackageWeight>
+				<UnitOfMeasurement>
+					<Code>LBS</Code>
+				</UnitOfMeasurement>
+				<Weight>5.40</Weight>
+			</PackageWeight>
+			<ReferenceNumber>
+				<Code>01</Code>
+				<Value>FN3-6732456-0526660</Value>
+			</ReferenceNumber>
+			<ReferenceNumber>
+				<Code>01</Code>
+				<Value>DZWHLCGPR</Value>
+			</ReferenceNumber>
+		</Package>
+	</Shipment>
+</TrackResponse>
