@@ -177,9 +177,9 @@ class UPSTest < ActiveSupport::TestCase
     tracking_response = xml_fixture('ups/service_level_present')
     @carrier.expects(:commit).returns(tracking_response)
     result = @carrier.find_tracking_info('1Z5FX0076803466397')
-    expected_service_level = ServiceLevel.new(type: '2ND DAY AIR',
+    expected_service_level = ServiceLevel.new(type: '002',
                                               description: '2ND DAY AIR',
-                                              short_description: '002')
+                                              short_description: '2ND DAY AIR')
     assert_equal expected_service_level, result.service_level
   end
 
