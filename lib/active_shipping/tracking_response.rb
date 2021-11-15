@@ -20,6 +20,12 @@ module ActiveShipping
   # @!attribute status_description
   #   @return [String]
   #
+  # @!attribute status_time
+  #   @return [Date, Time]
+  #
+  # @!attribute status_location
+  #   @return [ActiveShipping::Location]
+  #
   # @!attribute ship_time
   #   @return [Date, Time]
   #
@@ -49,12 +55,15 @@ module ActiveShipping
   #
   # @!attribute destination
   #   @return [ActiveShipping::Location]
+  #
+  # @!attribute service
+  #   @return [ActiveShipping::ServiceLevel]
   class TrackingResponse < Response
     attr_reader :carrier,:carrier_name,
-                :status,:status_code, :status_description,
+                :status,:status_code, :status_description, :status_time, :status_location,
                 :ship_time, :scheduled_delivery_date, :actual_delivery_date, :attempted_delivery_date,
                 :delivery_signature, :tracking_number, :shipment_events,
-                :shipper_address, :origin, :destination
+                :shipper_address, :origin, :destination, :service_level
 
     # @params (see ActiveShipping::Response#initialize)
     def initialize(success, message, params = {}, options = {})
@@ -63,6 +72,8 @@ module ActiveShipping
       @status = options[:status]
       @status_code = options[:status_code]
       @status_description = options[:status_description]
+      @status_time = options[:status_time]
+      @status_location = options[:status_location]
       @ship_time = options[:ship_time]
       @scheduled_delivery_date = options[:scheduled_delivery_date]
       @actual_delivery_date = options[:actual_delivery_date]
@@ -73,6 +84,7 @@ module ActiveShipping
       @shipper_address = options[:shipper_address]
       @origin = options[:origin]
       @destination = options[:destination]
+      @service_level = options[:service_level]
       super
     end
 
@@ -103,10 +115,12 @@ module ActiveShipping
     alias_method :attempted_delivery_time, :attempted_delivery_date
 
     def ==(other)
-      attributes = %i(carrier carrier_name status status_code status_description ship_time scheduled_delivery_date
-        actual_delivery_date attempted_delivery_date delivery_signature tracking_number shipper_address
-        origin destination
-      )
+      attributes = %i[
+        carrier carrier_name status status_code status_description
+        status_time status_location ship_time scheduled_delivery_date
+        actual_delivery_date attempted_delivery_date delivery_signature
+        tracking_number shipper_address origin destination service_level
+      ]
 
       attributes.all? { |attr| self.public_send(attr) == other.public_send(attr) } && compare_shipment_events(other)
     end

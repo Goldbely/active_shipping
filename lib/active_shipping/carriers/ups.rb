@@ -843,6 +843,7 @@ module ActiveShipping
       message = response_message(xml)
 
       if success
+        status_time, status_location = nil
         delivery_signature = nil
         exception_event, scheduled_delivery_date, actual_delivery_date = nil
         delivered, exception = false
@@ -924,26 +925,43 @@ module ActiveShipping
             end
             shipment_events[-1] = ShipmentEvent.new(shipment_events.last.name, shipment_events.last.time, destination, shipment_events.last.message, shipment_events.last.type_code)
           end
+
+          last_event = shipment_events.last
+          status_time = last_event.time
+          status_location = last_event.location
         end
 
+        service_level = if service_node = first_shipment.at('Service')
+                          ServiceLevel.new(type: service_node.at('Description').try(:text),
+                                           description: service_node.at('Description').try(:text),
+                                           short_description: service_node.at('Code').try(:text))
+                        end
+
       end
-      TrackingResponse.new(success, message, Hash.from_xml(response).values.first,
-                           :carrier => @@name,
-                           :xml => response,
-                           :request => last_request,
-                           :status => status,
-                           :status_code => status_code,
-                           :status_description => status_description,
-                           :delivery_signature => delivery_signature,
-                           :scheduled_delivery_date => scheduled_delivery_date,
-                           :actual_delivery_date => actual_delivery_date,
-                           :shipment_events => shipment_events,
-                           :delivered => delivered,
-                           :exception => exception,
-                           :exception_event => exception_event,
-                           :origin => origin,
-                           :destination => destination,
-                           :tracking_number => tracking_number)
+      TrackingResponse.new(
+        success,
+        message,
+        Hash.from_xml(response).values.first,
+        carrier: @@name,
+        xml: response,
+        request: last_request,
+        status: status,
+        status_code: status_code,
+        status_description: status_description,
+        status_time: status_time,
+        status_location: status_location,
+        delivery_signature: delivery_signature,
+        scheduled_delivery_date: scheduled_delivery_date,
+        actual_delivery_date: actual_delivery_date,
+        shipment_events: shipment_events,
+        delivered: delivered,
+        exception: exception,
+        exception_event: exception_event,
+        origin: origin,
+        destination: destination,
+        tracking_number: tracking_number,
+        service_level: service_level
+      )
     end
 
     def parse_delivery_dates_response(origin, destination, packages, response, options={})
