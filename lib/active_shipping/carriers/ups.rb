@@ -932,9 +932,9 @@ module ActiveShipping
         end
 
         service_level = if service_node = first_shipment.at('Service')
-                          ServiceLevel.new(type: service_node.at('Description').try(:text),
+                          ServiceLevel.new(type: service_node.at('Code').try(:text),
                                            description: service_node.at('Description').try(:text),
-                                           short_description: service_node.at('Code').try(:text))
+                                           short_description: service_node.at('Description').try(:text))
                         end
 
       end
