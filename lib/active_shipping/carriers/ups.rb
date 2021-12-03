@@ -1113,10 +1113,10 @@ module ActiveShipping
       else
         hour, minute, second = time.scan(/\d{2}/)
       end
-      offset ||= "+00:00"
+      offset ||= '+00:00'
       year, month, day = date[0..3], date[4..5], date[6..7]
 
-      Time.utc(year, month, day, hour, minute, second, offset)
+      Time.new(year, month, day, hour, minute, second, offset).utc
     end
 
     def response_success?(document)
