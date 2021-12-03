@@ -892,7 +892,7 @@ module ActiveShipping
           shipment_events = activities.map do |activity|
             description = activity.at('Status/StatusType/Description').try(:text)
             type_code = activity.at('Status/StatusType/Code').try(:text)
-            zoneless_time = parse_ups_datetime(:time => activity.at('Time'), :date => activity.at('Date')).in_time_zone(activity.at('GMTOffset').try(:text)).utc
+            zoneless_time = parse_ups_datetime(:time => activity.at('Time'), :date => activity.at('Date'), :offset => activity.at('GMTOffset'))
             location = location_from_address_node(activity.at('ActivityLocation/Address'))
             ShipmentEvent.new(description, zoneless_time, location, description, type_code)
           end
@@ -1107,15 +1107,16 @@ module ActiveShipping
     end
 
     def parse_ups_datetime(options = {})
-      time, date = options[:time].try(:text), options[:date].text
+      time, date, offset = options[:time].try(:text), options[:date].text, options[:offset]&.text
       if time.nil?
         hour, minute, second = 0
       else
         hour, minute, second = time.scan(/\d{2}/)
       end
+      offset ||= "+00:00"
       year, month, day = date[0..3], date[4..5], date[6..7]
 
-      Time.utc(year, month, day, hour, minute, second)
+      Time.utc(year, month, day, hour, minute, second, offset)
     end
 
     def response_success?(document)
