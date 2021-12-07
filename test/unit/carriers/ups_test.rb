@@ -228,6 +228,14 @@ class UPSTest < ActiveSupport::TestCase
     assert_nil result.status_time
   end
 
+  def test_time_with_zone
+    tracking_response = xml_fixture('ups/time_with_zone')
+    @carrier.expects(:commit).returns(tracking_response)
+    result = @carrier.find_tracking_info('1Z0543R31355546175').shipment_events[-1].time
+    expected_time = Time.utc(2021, 12, 03, 01, 37, 41)
+    assert_equal result, expected_time
+  end
+
   def test_location_from_address_node_kosovo_kv
     address = Nokogiri::XML::DocumentFragment.parse(xml_fixture('ups/location_node_kosovo_kv'))
 
