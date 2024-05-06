@@ -11,13 +11,13 @@ module ActiveShipping
     LIVE_URL = 'https://onlinetools.ups.com'
 
     RESOURCES = {
-      :rates => 'ups.app/xml/Rate',
-      :track => 'ups.app/xml/Track',
-      :ship_confirm => 'ups.app/xml/ShipConfirm',
-      :ship_accept => 'ups.app/xml/ShipAccept',
-      :delivery_dates =>  'ups.app/xml/TimeInTransit',
-      :void =>  'ups.app/xml/Void',
-      :validate_address => 'ups.app/xml/XAV'
+      :rates => 'api/ups.app/xml/Rate',
+      :track => 'api/ups.app/xml/Track',
+      :ship_confirm => 'api/ups.app/xml/ShipConfirm',
+      :ship_accept => 'api/ups.app/xml/ShipAccept',
+      :delivery_dates => 'api/ups.app/xml/TimeInTransit',
+      :void => 'api/ups.app/xml/Void',
+      :validate_address => 'api/ups.app/xml/XAV'
     }
 
     PICKUP_CODES = HashWithIndifferentAccess.new(
